@@ -81,6 +81,5 @@ if __name__ == '__main__':
     url_tpl='C:/Users/24253/Desktop/每月例行工作/10月工作内容/10月派单回单/派单/'
     url_img='C:/Users/24253/Desktop/每月例行工作/10月工作内容/10月派单回单/image/'
     city_lst=['昌都市城区','昌都机场高速','昌都市察雅县','昌都至察雅国道']
-    city=city_lst[0]
     for city in city_lst:
         creat_report(url_attach,url_tpl,url_img,city)
