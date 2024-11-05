@@ -22,7 +22,7 @@ def write_report(filepath:str,ind1:int):
     conplaint=dict()
 
     datestr = str((datetime.datetime.now()).strftime('%Y-%m-%d'))
-    #datestr = '2024-10-19'
+    #datestr = '2024-10-24'
     town_obj = {'卡若区': 0, '八宿县': 0, '边坝县': 0, '察雅县': 0, '丁青县': 0, '贡觉县': 0, '江达县': 0,
                 '类乌齐县': 0, '洛隆县': 0, '芒康县': 0, '左贡县': 0}
     town_obj_month = {'卡若区': 0, '八宿县': 0, '边坝县': 0, '察雅县': 0, '丁青县': 0, '贡觉县': 0, '江达县': 0,
@@ -166,7 +166,7 @@ def write_report(filepath:str,ind1:int):
 
 
 if __name__ == '__main__':
-    write_report('C:/Users/24253/Desktop/Python_Excel/昌都故障类投诉汇总20241019(V1).xlsx',76)
+    write_report('C:/Users/24253/Desktop/Python/Python_Excel/昌都故障类投诉汇总20241029.xlsx',166)
 
 
 

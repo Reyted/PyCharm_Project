@@ -1,8 +1,11 @@
 import csv
+from multiprocessing.pool import ThreadPool
+
 import openpyxl
 import time
 import pandas as pd
 from openpyxl import load_workbook
+import threading
 
 
 #写数据
@@ -60,11 +63,28 @@ def lst_cell(filepath1:str,filepath2:str,url:str):
     f2lst=[]
     celllst=[]
 
+    def open_filepath1(filepath:str):
+        with open(filepath, 'r') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                f1lst.append(row)
+
+    def open_filepath2(filepath:str):
+        with open(filepath, 'r') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                f2lst.append(row)
+
+    #process1=mp.Process(target=open_filepath1, args=(filepath1,)).start()
+    #threading.Thread(target=open_filepath1, args=(filepath1,)).start()
+    #threading.Thread(target=open_filepath2, args=(filepath2,)).start()
+
+    #process2=mp.Process(target=open_filepath2, args=open_filepath2).start()
+
     with open(filepath1, 'r') as f:
         reader = csv.reader(f)
         for row in reader:
             f1lst.append(row)
-
 
     with open(filepath2, 'r') as f:
         reader = csv.reader(f)
@@ -271,15 +291,19 @@ if __name__ == '__main__':
 
     today = time.strftime("%Y-%m-%d", time.localtime())
     # 调用函数进行合并
-    #merge_csv(f'{url}存量_板_20241017_114851.csv', f'{url}存量_板_20241017_115016.csv', f'{url}merged_file.csv')
+    merge_csv(f'{url}存量_板_20241017_114851.csv', f'{url}存量_板_20241017_115016.csv', f'{url}merged_file.csv')
 
-    #read_csv_file(f'{url}merged_file.csv')
+    read_csv_file(f'{url}merged_file.csv')
 
-    #lst_cell(f'{url}查询小区物理单板拓扑关系.csv',f'{url}查询小区静态参数.csv',url)
+    lst_cell(f'{url}查询小区物理单板拓扑关系.csv',f'{url}查询小区静态参数.csv',url)
+
+    #threading.Thread(target=merge_cell,args=(f'{url}查询小区物理单板拓扑关系.csv',f'{url}硬件信息{today}.xlsx', '基带板-全网')).start()
+    #threading.Thread(target=merge_cell,args=(f'{url}查询小区物理单板拓扑关系.csv',f'{url}硬件信息{today}.xlsx', 'RRU-全网')).start()
+
 
     # 基带板冗余
-    #merge_cell(f'{url}查询小区物理单板拓扑关系.csv',f'{url}硬件信息{today}.xlsx', '基带板-全网')
-    #second_filter(f'{url}硬件信息{today}.xlsx',f'{url}查询小区物理单板拓扑关系.csv','基带板-冗余')
+    merge_cell(f'{url}查询小区物理单板拓扑关系.csv',f'{url}硬件信息{today}.xlsx', '基带板-全网')
+    second_filter(f'{url}硬件信息{today}.xlsx',f'{url}查询小区物理单板拓扑关系.csv','基带板-冗余')
 
 
     # RRU冗余
