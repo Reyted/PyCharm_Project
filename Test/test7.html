@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件拖放与解压示例</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="file-drop-area" id="fileDropAreaA">
+            <span class="file-drop-message">将文件 a 拖放到此处</span>
+            <input type="file" class="file-input" id="fileInputA" multiple>
+        </div>
+        <div class="file-drop-area" id="fileDropAreaB">
+            <span class="file-drop-message">将文件 b 拖放到此处</span>
+            <input type="file" class="file-input" id="fileInputB" multiple>
+        </div>
+        <div class="file-drop-area" id="fileDropAreaC">
+            <span class="file-drop-message">将文件 c 拖放到此处</span>
+            <input type="file" class="file-input" id="fileInputC" multiple>
+        </div>
+        <button id="okButton">Ok</button>
+        <button id="cancelButton">Cancel</button>
+        <div id="outputArea"></div>
+    </div>
+
+</body>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.file-drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px 0;
+    position: relative;
+}
+
+.file-drop-message {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.file-input {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+#outputArea {
+    margin-top: 20px;
+    white-space: pre-line;
+}
+</style>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const fileDropAreas = [
+        { id: 'fileDropAreaA', inputId: 'fileInputA' },
+        { id: 'fileDropAreaB', inputId: 'fileInputB' },
+        { id: 'fileDropAreaC', inputId: 'fileInputC' }
+    ];
+    const okButton = document.getElementById('okButton');
+    const cancelButton = document.getElementById('cancelButton');
+    const outputArea = document.getElementById('outputArea');
+    const destinationFolder = 'unzipped_files';
+
+
+    function handleFileDrop(event, inputId) {
+        event.preventDefault();
+        const input = document.getElementById(inputId);
+        input.files = event.dataTransfer.files;
+    }
+
+
+    function handleDragOver(event) {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'copy';
+    }
+
+
+    function handleFileSelect(event, inputId) {
+        const files = event.target.files;
+        const output = [];
+        for (let i = 0; i < files.length; i++) {
+            if (files[i].name.endsWith('.zip')) {
+                unzipFile(files[i], destinationFolder)
+                  .then(() => {
+                        output.push(`文件 ${files[i].name} 解压成功，解压后的文件在 ${destinationFolder}`);
+                        outputArea.innerHTML = output.join('<br>');
+                    })
+                  .catch(error => {
+                        output.push(`文件 ${files[i].name} 解压失败: ${error}`);
+                        outputArea.innerHTML = output.join('<br>');
+                    });
+            } else {
+                output.push(`文件 ${files[i].name} 不是.zip 文件`);
+                outputArea.innerHTML = output.join('<br>');
+            }
+        }
+    }
+
+
+    async function unzipFile(file, destinationFolder) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const zipData = new Uint8Array(e.target.result);
+                const zip = new JSZip();
+                zip.loadAsync(zipData)
+                  .then(zip => {
+                        if (!window.fs) {
+                            window.fs = require('fs');
+                        }
+                        if (!window.path) {
+                            window.path = require('path');
+                        }
+                        if (!window.stream) {
+                            window.stream = require('stream');
+                        }
+                        if (!window.pako) {
+                            window.pako = require('pako');
+                        }
+                        const directory = path.join(destinationFolder, file.name.replace('.zip', ''));
+                        fs.mkdirSync(directory, { recursive: true });
+                        let count = 0;
+                        const total = Object.keys(zip.files).length;
+                        for (const fileName in zip.files) {
+                            const fileData = zip.files[fileName];
+                            fileData.async('uint8array')
+                                 .then(data => {
+                                        const filePath = path.join(directory, fileName);
+                                        const writeStream = fs.createWriteStream(filePath);
+                                        const bufferStream = new stream.PassThrough();
+                                        bufferStream.end(pako.inflate(data));
+                                        bufferStream.pipe(writeStream);
+                                        count++;
+                                        if (count === total) {
+                                            resolve();
+                                        }
+                                    })
+                                 .catch(error => {
+                                        reject(error);
+                                    });
+                        }
+                    })
+                  .catch(error => {
+                        reject(error);
+                    });
+            };
+            reader.onerror = function() {
+                reject(reader.error);
+            };
+            reader.readAsArrayBuffer(file);
+        });
+    }
+
+
+    fileDropAreas.forEach(area => {
+        const dropArea = document.getElementById(area.id);
+        const input = document.getElementById(area.inputId);
+        dropArea.addEventListener('dragover', handleDragOver);
+        dropArea.addEventListener('drop', (event) => handleFileDrop(event, area.inputId));
+        input.addEventListener('change', (event) => handleFileSelect(event, area.inputId));
+    });
+
+
+    okButton.addEventListener('click', () => {
+        const fileInputs = [
+            document.getElementById('fileInputA'),
+            document.getElementById('fileInputB'),
+            document.getElementById('fileInputC')
+        ];
+        fileInputs.forEach(input => {
+            if (input.files.length > 0) {
+                handleFileSelect({ target: input }, input.id);
+            }
+        });
+    });
+
+
+    cancelButton.addEventListener('click', () => {
+        outputArea.innerHTML = '';
+    });
+});
+</script>
+</html>

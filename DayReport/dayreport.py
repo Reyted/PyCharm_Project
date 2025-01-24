@@ -166,7 +166,9 @@ def write_report(filepath:str,ind1:int):
 
 
 if __name__ == '__main__':
-    write_report('C:/Users/24253/Desktop/Python/Python_Excel/昌都故障类投诉汇总20241029.xlsx',166)
+    filename='昌都故障类投诉汇总20241029' #文件名
+    ind=166 #新增表格起始行
+    write_report(f'C:/Users/24253/Desktop/Python/Python_Excel/{filename}.xlsx',ind)
 
 
 

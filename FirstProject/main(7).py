@@ -98,7 +98,7 @@ def merge_csv(file1, file2, output_file):
     df_merged.to_csv(output_file, index=False, encoding='utf-8-sig')
 
 if __name__ == '__main__':
-    url = 'C:/Users/24253/Desktop/PLAY/'
+    url = 'C:/Users/24253/Desktop/Python/PLAY/'
     today = time.strftime("%Y-%m-%d", time.localtime())
 
     merge_csv(f'{url}存量_板_20241017_114851.csv', f'{url}存量_板_20241017_115016.csv', f'{url}merged_file.csv')

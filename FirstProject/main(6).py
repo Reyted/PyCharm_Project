@@ -286,7 +286,7 @@ def read_csv_file(filepath):
 if __name__ == '__main__':
 
     #文件存储路径
-    url='C:/Users/24253/Desktop/PLAY/'
+    url='C:/Users/24253/Desktop/Python/PLAY/'
 
 
     today = time.strftime("%Y-%m-%d", time.localtime())

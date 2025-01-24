@@ -1,38 +1,42 @@
 import pandas as pd
-import xlwings as xw
+from numpy.ma.core import append
+import openpyxl
+from openpyxl import load_workbook
+import csv
+import os
+from future.backports.datetime import datetime
+from datetime import datetime
+from copy import copy
+import time
+import os
+import PySimpleGUI as sg
+import os
 
+if __name__=="__main__":
+    layout = [[sg.Text("选择文件 扇区通道查询结果-泰山:")],
+              [sg.InputText(key='-FILE_A-', enable_events=True), sg.FilesBrowse()],
+              [sg.Text("选择文件 扇区通道查询结果-新网:")],
+              [sg.InputText(key='-FILE_B-', enable_events=True), sg.FilesBrowse()],
+              [sg.Text("选择文件 MML报文解析-泰山:")],
+              [sg.InputText(key='-FILE_C-', enable_events=True), sg.FilesBrowse()],
+              [sg.Text("选择文件 MML报文解析-新网:")],
+              [sg.InputText(key='-FILE_D-', enable_events=True), sg.FilesBrowse()],
+              [sg.Button('提交')]]
 
-def read_excel(file_path, sheet_name=0):
-    try:
-        # 读取Excel文件
-        df = pd.read_excel(file_path, sheet_name=sheet_name)
-        return df
-    except Exception as e:
-        print(f"读取Excel文件时出错: {str(e)}")
-        return None
+    window = sg.Window('选择所需文件', layout)
 
-def read_txt(file_path, encoding='utf-8'):
-    try:
-        with open(file_path, 'r', encoding=encoding) as file:
-            return file.read()
-    except Exception as e:
-        print(f"读取文件时出错: {str(e)}")
-        return None
+    while True:
+        event, values = window.read()
+        if event == sg.WINDOW_CLOSE_ATTEMPTED_EVENT or event == 'Cancel':
+            break
+        if event == '提交':
+            sheet4_path_mr = values['-FILE_A-']
+            sheet4_path_zl_4 = values['-FILE_B-']
+            sheet4_path_zl_5 = values['-FILE_C-']
+            sheet4_path_zl_pp_4 = values['-FILE_D-']
 
-if __name__ == '__main__':
-    content = read_txt('C:/Users/24253/Desktop/每月例行工作/123/模板/5.txt')
-    base_station_5 = read_excel('C:/Users/24253/Desktop/每月例行工作/工参/昌都245G工参总版-1028.xlsx',
-                                'NR').values.tolist()
-    base_station_4 = read_excel('C:/Users/24253/Desktop/每月例行工作/工参/昌都245G工参总版-1028.xlsx',
-                                'LTE').values.tolist()
-    base_station = base_station_5 + base_station_4
-    lst = content.split('\n')
-    ind=0
-    for i in lst:
-        for item in base_station:
-            if i in item:
-                ind+=1
-                break
-            else:
-                print(i)
-                continue
+            print(path_str1)
+
+            window.close()
+        if event == sg.WIN_CLOSED:
+            break
