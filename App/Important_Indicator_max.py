@@ -142,6 +142,7 @@ def read_sheet3_data(file_path,type):
             excel_datetime = str(year) + '/' + str(month) + '/' + str(day+1)
             excel_datetime1 = str(year) + '/' + str(month) + '/' + str(day)
 
+
             for li in df.values:
                 sheet3_sort[li[2]] = [li[9], li[10], li[12]]
                 pp_ll[li[2]] = li[9]

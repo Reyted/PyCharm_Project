@@ -28,7 +28,7 @@ def merge_all_csv_files_in_path(path, output_file):
                     writer = csv.writer(out_file)
                     writer.writerow(row)
 
-file_path='C:/Users/24253/Desktop/工作内容/PRS数据/历史告警20250116154919400/'
+file_path='G:/工作内容/25年每月例行工作/1月工作内容/语音统计数据/每日数据/2月/07/历史告警20250207110425732/'
 # 调用函数，传入路径和输出文件的名称
 merge_all_csv_files_in_path(file_path, f'{file_path}历史告警.csv')
 

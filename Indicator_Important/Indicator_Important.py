@@ -13,9 +13,9 @@ sheet2_list_data=[]
 gc_band=dict()
 band_count={'n41':0,'n28':0}
 band_count_sinr={'n41':0,'n28':0}
-gc_path='C:/Users/24253/Desktop/工作内容/25年每月例行工作/工参/苏州华为工参20241223/苏州华为5G工参20241223.csv'
-file_path_prs='C:/Users/24253/Desktop/工作内容/PRS数据'
-file_path_xlsx='C:/Users/24253/Desktop/工作内容/25年每月例行工作/1月工作内容/指标提取/22/指标统计.xlsx'
+gc_path='G:/工作内容/25年每月例行工作/工参/苏州华为工参20241223/苏州华为5G工参20241223.csv'
+file_path_prs='G:/工作内容/PRS数据'
+file_path_xlsx='G:/工作内容/25年每月例行工作/1月工作内容/重点指标数据/2月/06/指标统计.xlsx'
 
 
 def list_files(directory):
