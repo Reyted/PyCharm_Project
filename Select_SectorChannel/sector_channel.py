@@ -9,8 +9,6 @@ from datetime import datetime
 from copy import copy
 import time
 import os
-import PySimpleGUI as sg
-import os
 
 FILE_TIME='0106-0112'
 TXS={'0':[],'1':[],'2':[],'3':[],'4':[],'5':[],'6':[],'7':[]}
@@ -46,7 +44,7 @@ def read_rru_id(filepath):
         RRU_ID[str1]=[li[7],li[8]]
 
 def read_gc(filepath):
-    with open(filepath, 'r') as f:
+    with open(filepath, 'r',encoding='utf-8') as f:
         csv_reader = csv.reader(f, delimiter=',')
         for row in csv_reader:
             ECGI[row[1]+'-'+row[17]]=row[35]
@@ -255,39 +253,14 @@ def apply_styles_to_last_two_rows(excel_file,num, sheet_name):
     workbook.save(excel_file)
 
 if __name__ == '__main__':
-    temp_select_filepath=''
-    temp_select_filepath2=''
-    mml_path=''
-    mml_path2=''
-    temp_select_gc='C:/Users/24253/Desktop/工作内容/25年每月例行工作/工参/苏州华为工参20241223/苏州华为4G工参20241223.csv'
-    rru_filepath='C:/Users/24253/Desktop/工作内容/PRS数据/SECTOREQM/工具/副本4G-RRU型号20240113.xlsx'
-    write_filepath='C:/Users/24253/Desktop/工作内容/PRS数据/SECTOREQM/工具/4G-RRU疑似被封堵梳理清单.xlsx'
+    temp_select_filepath='G:/工作内容/PRS数据/SECTOREQM/临时查询_查询结果_20250117-泰山.xlsx'
+    temp_select_filepath2='G:/工作内容/PRS数据/SECTOREQM/临时查询_查询结果_20250117-新网.xlsx'
+    mml_path='G:/工作内容/PRS数据/SECTOREQM/MML报文解析20250117165124-泰山.xlsx'
+    mml_path2='G:/工作内容/PRS数据/SECTOREQM/MML报文解析20250117165425-新网.xlsx'
+    temp_select_gc='G:/工作内容/25年每月例行工作/工参/苏州华为4G工参20250417.csv'
+    rru_filepath='G:/工作内容/PRS数据/SECTOREQM/工具/副本4G-RRU型号20240113.xlsx'
+    write_filepath='G:/工作内容/PRS数据/SECTOREQM/工具/4G-RRU疑似被封堵梳理清单.xlsx'
 
-    layout = [[sg.Text("选择文件 扇区通道查询结果-泰山:")],
-              [sg.InputText(key='-FILE_A-', enable_events=True), sg.FilesBrowse()],
-              [sg.Text("选择文件 扇区通道查询结果-新网:")],
-              [sg.InputText(key='-FILE_B-', enable_events=True), sg.FilesBrowse()],
-              [sg.Text("选择文件 MML报文解析-泰山:")],
-              [sg.InputText(key='-FILE_C-', enable_events=True), sg.FilesBrowse()],
-              [sg.Text("选择文件 MML报文解析-新网:")],
-              [sg.InputText(key='-FILE_D-', enable_events=True), sg.FilesBrowse()],
-              [sg.Button('提交')]]
-
-    window = sg.Window('选择所需文件', layout)
-
-    while True:
-        event, values = window.read()
-        if event == sg.WINDOW_CLOSE_ATTEMPTED_EVENT or event == 'Cancel':
-            break
-        if event == '提交':
-            temp_select_filepath = values['-FILE_A-']
-            temp_select_filepath2 = values['-FILE_B-']
-            mml_path = values['-FILE_C-']
-            mml_path2 = values['-FILE_D-']
-
-            window.close()
-        if event == sg.WIN_CLOSED:
-            break
 
 
     read_gc(temp_select_gc)
@@ -298,7 +271,7 @@ if __name__ == '__main__':
     read_temp_selectfile(temp_select_filepath2)
 
     for li in TXS:
-        append_data_to_excel(write_filepath, '第六批次',  TXS[li])
+        append_data_to_excel(write_filepath, '第七批次',  TXS[li])
 
     # 应用样式所有行
-    apply_styles_to_last_two_rows(write_filepath, 2, '第六批次')
+    apply_styles_to_last_two_rows(write_filepath, 2, '第七批次')

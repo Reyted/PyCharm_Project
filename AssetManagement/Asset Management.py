@@ -5,7 +5,7 @@ from docx import Document
 from docx.shared import Inches
 from docx.oxml.ns import qn
 from docx.enum.text import WD_ALIGN_PARAGRAPH
-from Test import test3
+from Test import distance
 import ScreecShot
 import pandas as pd
 

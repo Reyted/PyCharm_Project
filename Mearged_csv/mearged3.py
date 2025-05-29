@@ -11,7 +11,8 @@ def merge_all_csv_files_in_path(path, output_file):
     # 遍历指定路径下的所有文件
     for root, dirs, files in os.walk(path):
         for file in files:
-            if file.endswith('.csv'):
+            if 'c' in file:
+                print(file)
                 input_files.append(os.path.join(root, file))
     for file in input_files:
         with open(file, 'r', encoding='utf-8') as csv_file:
@@ -28,11 +29,6 @@ def merge_all_csv_files_in_path(path, output_file):
                     writer = csv.writer(out_file)
                     writer.writerow(row)
 
-file_path='C:/Users/24253/Desktop/新建文件夹 (7)/'
+file_path='C:/Users/24253/Desktop/新建文件夹 (4)/'
 # 调用函数，传入路径和输出文件的名称
 merge_all_csv_files_in_path(file_path, f'{file_path}语音保持.csv')
-
-
-
-
-
